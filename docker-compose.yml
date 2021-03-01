@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  
+  scrapp-proxy:
+    image: serebano/scrapp-proxy
+    restart: "always"
+    ports: 
+      - "3050:3050"
+    networks: 
+      - app-network
+
+  browserless:
+    image: browserless/chrome
+    restart: always
+    environment: 
+      - MAX_CONCURRENT_SESSIONS=10
+      - MAX_QUEUE_LENGTH=10
+      - PREBOOT_CHROME=true
+      - KEEP_ALIVE=true
+      - EXIT_ON_HEALTH_FAILURE=true
+      - TOKEN=MY-SUPER-SECRET-TOKEN
+      - ENABLE_CORS=true
+      - WORKSPACE_DELETE_EXPIRED=true
+      - WORKSPACE_EXPIRE_DAYS=1
+    ports:
+      - "3060:3000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
